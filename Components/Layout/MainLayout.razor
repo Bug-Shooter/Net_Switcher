@@ -1,0 +1,17 @@
+﻿@inherits LayoutComponentBase
+<style>
+     .container-bottom {
+         min-height: 100vh;
+         display: flex;
+         flex-direction: column;
+         justify-content: space-between;
+     }
+</style>
+
+<div class="page container-bottom">
+    <main>
+        <article class="content p-4">
+            @Body
+        </article>
+    </main>
+</div>

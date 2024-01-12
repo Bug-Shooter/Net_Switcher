@@ -1,0 +1,72 @@
+﻿@page "/"
+@using SG_Net_Switcher.Services
+@inject NetworkService _networkService
+
+<div class="row m-0 p-0">
+    <div class="col m-0 p-o">
+        <p class="my-1 mx-0">Статус WiFi: @{
+                if (_networkService.IsWifiConnected())
+                {
+                    <span class="text-success">Подключен</span>
+                }
+
+                else
+                {
+                    <span class="text-danger">Не подключен</span>}
+                }
+        </p>
+        <p class="my-1 mx-0">Router IP: @_networkService.GetRouterIp()</p>
+        <p class="my-1 mx-0">My IP: @_networkService.GetMyIp()</p>
+    </div>
+    <div class="col-auto m-0 p-0">
+        <button class="btn btn-link" @onclick="UpdatePage">Обновить</button>
+    </div>
+</div>
+<br />
+<h3 class="display-3 text-center">Переключение интернета</h3>
+<br class="m-2" />
+
+
+<h5 class="display-5 ms-1">Элина</h5>
+<div class="d-grid gap-2">
+    <button class="btn btn-lg btn-success" type="button" disabled="@DisableButtonCheck()" @onclick=@(x=>Sent("inet_elina_on"))>Включить</button>
+    <button class="btn btn-lg btn-danger" type="button" disabled="@DisableButtonCheck()" @onclick=@(x=>Sent("inet_elina_off"))>Отключить</button>
+</div>
+
+<br />
+<br />
+
+<h5 class="display-5 ms-1">Елисей</h5>
+<div class="d-grid gap-2">
+    <button class="btn btn-lg btn-success" type="button" disabled="@DisableButtonCheck()" @onclick=@(x=>Sent("inet_seka_on"))>Включить</button>
+    <button class="btn btn-lg btn-danger" type="button" disabled="@DisableButtonCheck()" @onclick=@(x=>Sent("inet_seka_off"))>Отключить</button>
+</div>
+
+<br class="m-2" />
+@if (!string.IsNullOrEmpty(Result))
+{   
+    <figure class="text-center">
+        <blockquote class="blockquote">
+            @Result
+        </blockquote>
+        <figcaption class="blockquote-footer">
+            Результат
+        </figcaption>
+    </figure>
+}
+
+
+@code {
+    public bool DisableButtonCheck() => !_networkService.IsWifiConnected();
+    public string Result = "";
+
+    public void UpdatePage()
+    {
+        StateHasChanged();
+    }
+
+    public void Sent(string ScriptName)
+    {
+        Result = _networkService.SendCommand(ScriptName);
+    }
+}
